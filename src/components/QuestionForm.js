@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_URL } from "./App";
 
 function QuestionForm(props) {
   const [formData, setFormData] = useState({
@@ -19,7 +20,28 @@ function QuestionForm(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(formData);
+    const formatedData = {
+      id: formData.id,
+      prompt: formData.prompt,
+      answers:[
+        formData.answer1,
+        formData.answer3,
+        formData.answer3,
+        formData.answer4
+      ],
+      correctIndex: formData.correctIndex
+    }
+    fetch(API_URL,{
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formatedData)
+    })
+    .then(r=>r.json())
+    .then(data=> {
+      props.onQuestionSubmit(data)
+    })
+    // Write a fetch post to the server
+    // Once the server has updated have a callback fn update the display
   }
 
   return (
